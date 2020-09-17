@@ -35,12 +35,7 @@ namespace JWT.Controllers
         // Chamamos nosso método para validar nosso usuário da aplicação
         private Usuario AuthenticateUser(Usuario login)
         {
-            var usuario = _context.Usuario.FirstOrDefault(u => u.Email == login.Email && u.Senha == login.Senha);
-
-            if (usuario != null)
-                usuario = login;
-
-            return usuario;
+            return _context.Usuario.Include(a => a.IdAcessoNavigation).FirstOrDefault(u => u.Email == login.Email && u.Senha == login.Senha);
         }
 
         // Criamos nosso método que vai gerar nosso Token
@@ -54,6 +49,7 @@ namespace JWT.Controllers
             var claims = new[] {
                 new Claim(JwtRegisteredClaimNames.NameId, userInfo.Nome),
                 new Claim(JwtRegisteredClaimNames.Email, userInfo.Email),
+                new Claim(ClaimTypes.Role, userInfo.IdAcessoNavigation.Tipo),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

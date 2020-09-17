@@ -18,7 +18,7 @@ namespace JWT.Controllers
         private NyousContext _context = new NyousContext();
 
         // GET: api/Categorias
-        [Authorize]
+        [Authorize(Roles = "Padrao,Administrador")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Categoria>>> GetCategoria()
         {
